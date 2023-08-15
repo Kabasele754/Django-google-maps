@@ -1,0 +1,51 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+  <h1>Find Restaurants Near Address</h1>
+  <form method="post">
+    {% csrf_token %}
+    <label >Address:</label>
+    <input  type="text" id="search_input" name="address" >
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+<div>
+
+</div>
+<p></p>
+<div id="map">
+
+</div>
+
+  {% if restaurants %}
+
+
+
+    <script>
+
+
+
+      function initMap() {
+      console.log("Voir maps")
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: {{ restaurants.0.lat }}, lng: {{ restaurants.0.lng }}},
+          zoom: 15,
+        });
+        console.log({{ restaurants.0.lat }})
+        {% for restaurant in restaurants %}
+          var marker = new google.maps.Marker({
+            position: {lat: {{ restaurant.lat }}, lng: {{ restaurant.lng }}},
+            map: map,
+            title: '{{ restaurant.name }}'
+          });
+
+        {% endfor %}
+      }
+
+
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?v=3.50&key={{key}}&callback=initMap"
+    >
+    </script>
+  {% endif %}
+{% endblock %}
+
